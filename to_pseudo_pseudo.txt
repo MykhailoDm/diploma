@@ -1,0 +1,11 @@
+DEFINE FUNCTION pplncreate_with_dropout():
+    SET mdl TO Sequential()
+    SET dropout_weight TO 0.5
+    SET l2_reg_factor TO 0.0001
+    mdl.add(Dropout(dropout_weight, INPUT_shape=(60,)))
+    mdl.add(Dense(60, INPUT_shape=(60,), activation='relu', kernel_regularizer=regularizers.l2(l2_reg_factor)))
+    mdl.add(Dense(30,  activation='relu', kernel_regularizer=regularizers.l2(l2_reg_factor)))
+    mdl.add(Dense(1, activation='sigmoid', kernel_regularizer=regularizers.l2(l2_reg_factor)))
+    SET sgd TO SGD(learning_rate=0.01, momentum=0.8)
+    mdl.compile(loss='binary_crossentropy', optimizer=sgd, metrics=['accuracy'])
+    RETURN mdl
