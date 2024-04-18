@@ -1,3 +1,4 @@
+from sklearn.model_selection import cross_validate
 from sklearn.model_selection import cross_val_score
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import StratifiedKFold
@@ -9,7 +10,7 @@ import matplotlib.pyplot as plt
 CCP_ALPHA = 0.03
 
 # завантажуємо датасет
-dataset = read_csv("sonar.csv", header=None).values
+dataset = read_csv("../sonar.csv", header=None).values
 # розділяємо в data (X) та target (Y) змінні
 input_x = dataset[:,0:60].astype(float)
 input_y = dataset[:,60]
@@ -26,8 +27,12 @@ model = tree.DecisionTreeClassifier(ccp_alpha=CCP_ALPHA)
 
 # Тренуємо та оцінюємо точність
 kfold = StratifiedKFold(n_splits=10, shuffle=True)
-results = cross_val_score(model, input_x, encoded_Y, cv=kfold)
-print("Модель: %.2f%% " % (results.mean()*100))
+
+results = cross_validate(model, input_x, encoded_Y, cv=kfold, return_train_score=True)
+
+# Print train and test accuracies
+print("Train accuracy: %.2f%% " % (results['train_score'].mean()*100))
+print("Test accuracy: %.2f%% " % (results['test_score'].mean()*100))
 
 # model.fit(input_x, input_y)
 # tree.plot_tree(model)

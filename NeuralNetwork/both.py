@@ -1,3 +1,4 @@
+from sklearn.model_selection import cross_validate
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
 from tensorflow.keras.optimizers import SGD
@@ -14,7 +15,7 @@ from sklearn.feature_selection import SelectKBest
 from sklearn.feature_selection import f_classif
 
 # завантажуємо датасет
-dataset = read_csv("sonar.csv", header=None).values
+dataset = read_csv("../sonar.csv", header=None).values
 # розділяємо в інпут (X) та аутпут (Y) змінні
 input_x = dataset[:,0:60].astype(float)
 input_y = dataset[:,60]
@@ -43,5 +44,9 @@ estmtrs.append(('mlp', KerasClassifier(model=pplncreate_with_dropout, epochs=300
 # пайплайн
 ppln = Pipeline(estmtrs)
 kfold = StratifiedKFold(n_splits=10, shuffle=True)
-results = cross_val_score(ppln, input_x, encoded_Y, cv=kfold)
-print("Dropout and L2: %.2f%% " % (results.mean()*100))
+
+results = cross_validate(ppln, input_x, encoded_Y, cv=kfold, return_train_score=True)
+
+# Print train and test accuracies
+print("Train accuracy: %.2f%% " % (results['train_score'].mean()*100))
+print("Test accuracy: %.2f%% " % (results['test_score'].mean()*100))

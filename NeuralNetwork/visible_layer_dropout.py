@@ -1,3 +1,4 @@
+from sklearn.model_selection import cross_validate
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
 from tensorflow.keras.optimizers import SGD
@@ -11,7 +12,7 @@ from pandas import read_csv
 from scikeras.wrappers import KerasClassifier
 
 # завантажуємо датасет
-dataset = read_csv("sonar.csv", header=None).values
+dataset = read_csv("../sonar.csv", header=None).values
 # розділяємо в інпут (X) та аутпут (Y) змінні
 X = dataset[:,0:60].astype(float)
 Y = dataset[:,60]
@@ -38,5 +39,17 @@ estmtrs.append(('mlp', KerasClassifier(model=pplncreate_with_dropout, epochs=300
 # пайплайн
 ppln = Pipeline(estmtrs)
 kfold = StratifiedKFold(n_splits=10, shuffle=True)
-results = cross_val_score(ppln, X, encoded_Y, cv=kfold)
-print("Dropout: %.2f%% " % (results.mean()*100))
+
+
+# Perform cross validation with cross_validate function
+# scoring = [KerasClassifier.scorer()]
+# results = cross_validate(ppln, X, encoded_Y, cv=kfold, scoring=scoring)
+
+results = cross_validate(ppln, X, encoded_Y, cv=kfold, return_train_score=True)
+
+# Print train and test accuracies
+print("Train accuracy: %.2f%% " % (results['train_score'].mean()*100))
+print("Test accuracy: %.2f%% " % (results['test_score'].mean()*100))
+
+# results = cross_val_score(ppln, X, encoded_Y, cv=kfold)
+# print("Dropout: %.2f%% " % (results.mean()*100))
