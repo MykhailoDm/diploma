@@ -33,3 +33,7 @@ results = cross_validate(model, input_x, encoded_Y, cv=kfold, return_train_score
 # Print train and test accuracies
 print("Train accuracy: %.2f%% " % (results['train_score'].mean()*100))
 print("Test accuracy: %.2f%% " % (results['test_score'].mean()*100))
+
+
+# The time for scoring the estimator on the test set for each cv split (seconds)
+print("Time:", (results['score_time'].mean()))

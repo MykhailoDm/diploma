@@ -53,3 +53,7 @@ print("Test accuracy: %.2f%% " % (results['test_score'].mean()*100))
 
 # results = cross_val_score(ppln, X, encoded_Y, cv=kfold)
 # print("Dropout: %.2f%% " % (results.mean()*100))
+
+
+# The time for scoring the estimator on the test set for each cv split (seconds)
+print("Time:", (results['score_time'].mean()))

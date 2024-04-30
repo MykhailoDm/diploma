@@ -38,3 +38,6 @@ print("Test accuracy: %.2f%% " % (results['test_score'].mean()*100))
 # model.fit(input_x, input_y)
 # tree.plot_tree(model)
 # plt.show()
+
+# The time for scoring the estimator on the test set for each cv split (seconds)
+print("Time:", (results['score_time'].mean()))
