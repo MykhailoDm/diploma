@@ -35,3 +35,9 @@ print("Test accuracy: %.2f%% " % (results['test_score'].mean()*100))
 
 # The time for scoring the estimator on the test set for each cv split (seconds)
 print("Time:", (results['score_time'].mean()))
+
+model.fit(input_x, encoded_Y)
+# To serialize
+import pickle
+with open('ada_boost_random_forest.pkl', 'wb') as fid:
+    pickle.dump(model, fid)

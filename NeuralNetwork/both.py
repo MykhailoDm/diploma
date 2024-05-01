@@ -40,7 +40,8 @@ def pplncreate_with_dropout():
     sgd = SGD(learning_rate=0.01, momentum=0.8)
     mdl.compile(loss='binary_crossentropy', optimizer=sgd, metrics=['accuracy'])
     return mdl
-estmtrs.append(('mlp', KerasClassifier(model=pplncreate_with_dropout, epochs=300, batch_size=16, verbose=0)))
+estmtr= KerasClassifier(model=pplncreate_with_dropout, epochs=300, batch_size=16, verbose=0)
+estmtrs.append(('mlp', estmtr))
 # пайплайн
 ppln = Pipeline(estmtrs)
 kfold = StratifiedKFold(n_splits=10, shuffle=True)
@@ -54,3 +55,9 @@ print("Test accuracy: %.2f%% " % (results['test_score'].mean()*100))
 
 # The time for scoring the estimator on the test set for each cv split (seconds)
 print("Time:", (results['score_time'].mean()))
+
+estmtr.fit(input_x, encoded_Y)
+# To serialize
+import pickle
+with open('neural_network_l2_and_dropout.pkl', 'wb') as fid:
+    pickle.dump(estmtr, fid)
