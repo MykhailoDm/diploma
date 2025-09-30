@@ -1,3 +1,4 @@
+import matplotlib.pyplot as plt
 from sklearn.model_selection import cross_validate
 from sklearn.model_selection import cross_val_score
 from sklearn.preprocessing import LabelEncoder
@@ -22,18 +23,39 @@ print("Rock Mine label mapping:", name_mapping)
 
 # input_x = SelectKBest(f_classif, k=50).fit_transform(input_x, encoded_Y)
 
-# створюємо модель
-model = SVC(kernel='linear')
+i_array = []
+accuracy_array = []
+time_array = []
 
-# Тренуємо та оцінюємо точність
-kfold = StratifiedKFold(n_splits=10, shuffle=True)
+i = 0.5
+while i <= 1.5:
+    # створюємо модель
+    model = SVC(C=i, kernel='linear')
 
-results = cross_validate(model, input_x, encoded_Y, cv=kfold, return_train_score=True)
+    # Тренуємо та оцінюємо точність
+    kfold = StratifiedKFold(n_splits=10, shuffle=True)
 
-# Print train and test accuracies
-print("Train accuracy: %.2f%% " % (results['train_score'].mean()*100))
-print("Test accuracy: %.2f%% " % (results['test_score'].mean()*100))
+    results = cross_validate(model, input_x, encoded_Y, cv=kfold, return_train_score=True)
+
+    # Print train and test accuracies
+    print("Train accuracy: %.2f%% " % (results['train_score'].mean()*100))
+    print("Test accuracy: %.2f%% " % (results['test_score'].mean()*100))
 
 
-# The time for scoring the estimator on the test set for each cv split (seconds)
-print("Time:", (results['score_time'].mean()))
+    # The time for scoring the estimator on the test set for each cv split (seconds)
+    print("Time:", (results['score_time'].mean()))
+
+    i_array.append(i)
+    accuracy_array.append(results['test_score'].mean()*100)
+    time_array.append(results['score_time'].mean())  
+
+    i += 0.1
+
+fig = plt.figure()
+ax = plt.axes(projection='3d')
+ax.plot3D(i_array, accuracy_array, time_array, 'green')
+ax.set_xlabel('C value')
+ax.set_ylabel('Accuracy')
+ax.set_zlabel('Time')
+ax.set_title('SVM Accuracy')
+plt.show()
