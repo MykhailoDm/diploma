@@ -52,10 +52,17 @@ while i <= 1.5:
     i += 0.1
 
 fig = plt.figure()
-ax = plt.axes(projection='3d')
-ax.plot3D(i_array, accuracy_array, time_array, 'green')
+ax = plt.axes()
+ax.plot(i_array, accuracy_array, 'green')
 ax.set_xlabel('C value')
 ax.set_ylabel('Accuracy')
-ax.set_zlabel('Time')
 ax.set_title('SVM Accuracy')
+plt.show()
+
+fig = plt.figure()
+ax = plt.axes()
+ax.plot(i_array, time_array, 'green')
+ax.set_xlabel('C value')
+ax.set_ylabel('Time')
+ax.set_title('SVM Time')
 plt.show()
